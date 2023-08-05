@@ -30,7 +30,7 @@ class Offense():
             current_play = data_dict[i].get("type").get("name").lower()
             if current_play in GOOD_PLAYS:
                 coord = data_dict[i]["location"]
-                position = data_dict[i]["position"]["name"]
+                position = data_dict[i]["type"]["name"]
                 min, sec = data_dict[i]["minute"], data_dict[i]["second"]
                 self.add_event(coords=coord, position=position, time=min*60+sec)
         self.normalize_timestamp()
