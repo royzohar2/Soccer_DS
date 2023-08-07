@@ -1,9 +1,12 @@
 from statsbombpy import sb
+import pandas as pd
 import pickle
+from mplsoccer import Pitch
+import matplotlib.pyplot as plt
 
 GOOD_PLAYS = {"carry", "pass", "dribble" , "shot"}
 class Offense():
-    def __init__(self, match_id , id , index ,type):
+    def __init__(self, match_id , id , index ,type, play_pattern):
         self.match_id = match_id
         self.id = id
         self.index = index
@@ -11,6 +14,7 @@ class Offense():
         self.list_coords = []
         self.list_player_position = []
         self.list_time =[]
+        self.play_pattern = play_pattern
 
     def add_event(self, coords , position , time):
         self.list_coords.append(coords)
@@ -34,6 +38,38 @@ class Offense():
                 min, sec = data_dict[i]["minute"], data_dict[i]["second"]
                 self.add_event(coords=coord, position=position, time=min*60+sec)
         self.normalize_timestamp()
+
+    def print_offense(self):
+        df = pd.DataFrame({'match_id' : self.match_id,
+                           'id': self.id,
+                           'play_pattern': self.play_pattern,
+                           'type': self.type,
+                           'coords': self.list_coords[:-1],
+                           'player_position': self.list_player_position,
+                           'time': self.list_time
+                          })
+        return df
+
+    def get_coords(self):
+        return self.list_coords
+
+    def plot_offense(self):
+        attack_coords = self.get_coords()
+        lines = []
+        for i in range(len(attack_coords)):
+            if i + 1 != len(attack_coords):
+                line = [attack_coords[i], attack_coords[i + 1]]
+                lines.append(line)
+        p = Pitch(pitch_type='statsbomb')
+        fig, ax = p.draw(figsize=(8, 8))
+        p.scatter(x=[coords[0] for coords in attack_coords], y=[coords[1] for coords in attack_coords], ax=ax)
+        p.lines(xstart=[coords[0][0] for coords in lines],
+                ystart=[coords[0][1] for coords in lines],
+                xend=[coords[1][0] for coords in lines],
+                yend=[coords[1][1] for coords in lines],
+                ax=ax)
+        plt.title(f"Pattern:{self.play_pattern}  Shot Time:{self.list_time[-1]}")
+        plt.show()
 
 #########################################################################################################
 
@@ -138,6 +174,8 @@ def process(json_data , list_offense):
     for data in json_data:
         curr_type = data.get("type").get("name")
         if curr_type == "Shot":
+            shot_end_location = data.get("shot").get("end_location")
+            fixed_end_location = shot_end_location[:-1] if len(shot_end_location)==3 else shot_end_location
             play_make=data.get("play_pattern").get("name")
             start_index = PLAY_MAP.get(play_make, PLAY_MAP.get("default"))(data.get("index"), json_data)
             if start_index == -1:
@@ -146,9 +184,11 @@ def process(json_data , list_offense):
                 match_id = json_data[0].get("match_id"),
                 id = data.get("id"),
                 index = data.get("index"),
-                type = data.get("type").get("name")
+                type = data.get("type").get("name"),
+                play_pattern=play_make
             )
             offense.create_offense(start_index, end = data.get("index"), data_dict = json_data)
+            offense.list_coords.append(shot_end_location)
             list_offense.append(offense)
 
 
