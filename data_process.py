@@ -5,20 +5,19 @@ from mplsoccer import Pitch
 import matplotlib.pyplot as plt
 
 GOOD_PLAYS = {"carry", "pass", "dribble" , "shot"}
-class Offense():
-    def __init__(self, match_id , id , index ,type, play_pattern):
+class Get_Offense():
+    def __init__(self, match_id , id , index , play_pattern):
         self.match_id = match_id
         self.id = id
         self.index = index
-        self.type = type
-        self.list_coords = []
-        self.list_player_position = []
-        self.list_time =[]
         self.play_pattern = play_pattern
+        self.list_coords = []
+        self.list_action_type = []
+        self.list_time =[]
 
-    def add_event(self, coords , position , time):
+    def add_event(self, coords , action_type , time):
         self.list_coords.append(coords)
-        self.list_player_position.append(position)
+        self.list_action_type.append(action_type)
         self.list_time.append(time)
 
     def normalize_timestamp(self):
@@ -34,27 +33,24 @@ class Offense():
             current_play = data_dict[i].get("type").get("name").lower()
             if current_play in GOOD_PLAYS:
                 coord = data_dict[i]["location"]
-                position = data_dict[i]["type"]["name"]
+                action_type = data_dict[i]["type"]["name"]
                 min, sec = data_dict[i]["minute"], data_dict[i]["second"]
-                self.add_event(coords=coord, position=position, time=min*60+sec)
+                self.add_event(coords=coord, action_type=action_type, time=min*60+sec)
         self.normalize_timestamp()
 
+# maybe we should delete this
     def print_offense(self):
         df = pd.DataFrame({'match_id' : self.match_id,
                            'id': self.id,
                            'play_pattern': self.play_pattern,
-                           'type': self.type,
                            'coords': self.list_coords[:-1],
-                           'player_position': self.list_player_position,
+                           'player_position': self.list_action_type,
                            'time': self.list_time
                           })
         return df
 
-    def get_coords(self):
-        return self.list_coords
-
     def plot_offense(self):
-        attack_coords = self.get_coords()
+        attack_coords = self.list_coords
         lines = []
         for i in range(len(attack_coords)):
             if i + 1 != len(attack_coords):
@@ -180,11 +176,10 @@ def process(json_data , list_offense):
             start_index = PLAY_MAP.get(play_make, PLAY_MAP.get("default"))(data.get("index"), json_data)
             if start_index == -1:
                 continue
-            offense = Offense(
+            offense = Get_Offense(
                 match_id = json_data[0].get("match_id"),
                 id = data.get("id"),
                 index = data.get("index"),
-                type = data.get("type").get("name"),
                 play_pattern=play_make
             )
             offense.create_offense(start_index, end = data.get("index"), data_dict = json_data)
