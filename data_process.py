@@ -6,11 +6,13 @@ import matplotlib.pyplot as plt
 
 GOOD_PLAYS = {"carry", "pass", "dribble" , "shot"}
 class Get_Offense():
-    def __init__(self, match_id , id , index , play_pattern):
+    def __init__(self, match_id , id , index , play_pattern , end_location , outcome):
         self.match_id = match_id
         self.id = id
         self.index = index
         self.play_pattern = play_pattern
+        self.end_location = end_location
+        self.outcome = outcome
         self.list_coords = []
         self.list_action_type = []
         self.list_time =[]
@@ -171,7 +173,7 @@ def process(json_data , list_offense):
         curr_type = data.get("type").get("name")
         if curr_type == "Shot":
             shot_end_location = data.get("shot").get("end_location")
-            fixed_end_location = shot_end_location[:-1] if len(shot_end_location)==3 else shot_end_location
+            outcome = data.get("shot").get("outcome").get("name")
             play_make=data.get("play_pattern").get("name")
             start_index = PLAY_MAP.get(play_make, PLAY_MAP.get("default"))(data.get("index"), json_data)
             if start_index == -1:
@@ -180,10 +182,11 @@ def process(json_data , list_offense):
                 match_id = json_data[0].get("match_id"),
                 id = data.get("id"),
                 index = data.get("index"),
-                play_pattern=play_make
+                play_pattern=play_make ,
+                end_location = shot_end_location , 
+                outcome = outcome,
             )
             offense.create_offense(start_index, end = data.get("index"), data_dict = json_data)
-            offense.list_coords.append(shot_end_location)
             list_offense.append(offense)
 
 
@@ -192,16 +195,22 @@ def main():
 
     competitions = sb.competitions()
     for indexC, rowC in competitions.iterrows():
-        matches=sb.matches(competition_id = rowC["competition_id"], season_id = rowC["season_id"])
-        for indexM, rowM in matches.iterrows():
-            match_id=rowM['match_id']
-            events=sb.events(match_id = match_id, fmt = "json")
-            list_of_dict=[]
-            for d in events.keys():
-                list_of_dict.append(events[d])
-            process(list_of_dict ,list_offense)
+        try:
+            matches=sb.matches(competition_id = rowC["competition_id"], season_id = rowC["season_id"])
+            for indexM, rowM in matches.iterrows():
+                try:
+                    match_id=rowM['match_id']
+                    events=sb.events(match_id = match_id, fmt = "json")
+                    list_of_dict=[]
+                    for d in events.keys():
+                        list_of_dict.append(events[d])
+                    process(list_of_dict ,list_offense)
+                except:
+                    print("small try")
+        except:
+            print("big try")
 
-    with open('/data/final_data.pkl', 'wb') as file:
+    with open('data/final_data.pkl', 'wb') as file:
         pickle.dump(list_offense, file)
 
 if __name__ == "__main__":

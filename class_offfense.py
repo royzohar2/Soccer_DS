@@ -10,6 +10,8 @@ class Offense():
         self.id = get_offense.id
         self.index = get_offense.index
         self.play_pattern = get_offense.play_pattern
+        self.end_location = get_offense.end_location
+        self.outcome = get_offense.outcome
         self.list_coords = get_offense.list_coords
         self.list_action_type = get_offense.list_action_type
         self.list_time = get_offense.list_time
@@ -19,7 +21,7 @@ class Offense():
         df = pd.DataFrame({'match_id' : self.match_id,
                            'id': self.id,
                            'play_pattern': self.play_pattern,
-                           'coords': self.list_coords[:-1],
+                           'coords': self.list_coords,
                            'player_position': self.list_action_type,
                            'time': self.list_time
                           })
