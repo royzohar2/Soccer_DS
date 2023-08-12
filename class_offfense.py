@@ -15,6 +15,7 @@ class Offense():
         self.list_coords = get_offense.list_coords
         self.list_action_type = get_offense.list_action_type
         self.list_time = get_offense.list_time
+        self.index_in_current_list = -1
 
 
     def print_offense(self):
