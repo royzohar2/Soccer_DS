@@ -6,50 +6,49 @@ import open3d as o3d
 
 ############################# DTW #########################
 def dp(dist_mat):
-    N, M = dist_mat.shape 
+    N, M = dist_mat.shape
     # Initialize the cost matrix
     cost_mat = np.zeros((N + 1, M + 1))
-    for i in range(1, N + 1):
-        cost_mat[i, 0] = np.inf
-    for i in range(1, M + 1):
-        cost_mat[0, i] = np.inf
+    cost_mat[1:, 0] = np.inf
+    cost_mat[0, 1:] = np.inf
 
     for i in range(N):
         for j in range(M):
             penalty = [
-                cost_mat[i, j],      # match (0)
-                cost_mat[i, j + 1],  # insertion (1)
-                cost_mat[i + 1, j]]  # deletion (2)
+                cost_mat[i, j],               # match (0)
+                cost_mat[i, j + 1],           # insertion (1)
+                cost_mat[i + 1, j]]           # deletion (2)
             i_penalty = np.argmin(penalty)
             cost_mat[i + 1, j + 1] = dist_mat[i, j] + penalty[i_penalty]
 
     # Strip infinity edges from cost_mat before returning
     cost = cost_mat[N, M] / (N + M)
-    return  cost
+    return cost
 
-def custom_distance_between_points(offense1 , i  , offense2 , j):
-    coords_d = math.sqrt((offense1.list_coords[i][0] - offense2.list_coords[j][0])**2 + (offense1.list_coords[i][1] - offense2.list_coords[j][1])**2)
-    time_d = abs(offense1.list_time[i] - offense2.list_time[j])
-    if offense1.list_action_type[i] == offense2.list_action_type[j]:
-        action_d = 0
-    else:
-        action_d = 1
-
-    # normalize
-    time_d = time_d / 248
-    coords_d =coords_d / 170
-    d = 0.5 * coords_d + 0.25*time_d + 0.25*action_d
-    return d
-
-def DTW(offense1 ,offense2):
+def DTW(offense1, offense2):
     N = len(offense1.list_coords)
     M = len(offense2.list_coords)
     dist_mat = np.zeros((N, M))
+
     for i in range(N):
         for j in range(M):
-            dist_mat[i, j] = custom_distance_between_points(offense1 , i  , offense2 , j)
+            dist_mat[i, j] = custom_distance_between_points(offense1, i, offense2, j)
+
     cost = dp(dist_mat)
-    return  cost
+    return cost
+
+def custom_distance_between_points(offense1, i, offense2, j):
+    coords_d = np.sqrt((offense1.list_coords[i][0] - offense2.list_coords[j][0])**2 + 
+                       (offense1.list_coords[i][1] - offense2.list_coords[j][1])**2)
+    time_d = abs(offense1.list_time[i] - offense2.list_time[j])
+    action_d = 0 if offense1.list_action_type[i] == offense2.list_action_type[j] else 1
+
+    # Normalize
+    time_d /= 248
+    coords_d /= 170
+    d = 0.6 * coords_d + 0.3 * time_d + 0.1 * action_d
+    return d
+
 
 
 
@@ -77,28 +76,24 @@ def plot_points_cloud(pc1, pc2):
 
 
 def O3D(offense1, offense2):
-    # Extract relevant data from offense instances
-    coords1 = np.array(offense1.list_coords)
-    coords2 = np.array(offense2.list_coords)
-    list_time1 = np.array(offense1.list_time)
-    list_time2 = np.array(offense2.list_time)
-    # Normalize
-    coords1 = coords1 / 170
-    coords2 = coords2 / 170
-    list_time1 = list_time1 / 248
-    list_time2 = list_time2 / 248
+    # Extract relevant data from offense instances and normalize
+    coords1 = np.array(offense1.list_coords) / 170
+    coords2 = np.array(offense2.list_coords) / 170
+    list_time1 = np.array(offense1.list_time) / 248
+    list_time2 = np.array(offense2.list_time) / 248
+
     # Create the point clouds by combining the stacked points with list_time
     point_cloud1 = np.hstack((coords1, list_time1.reshape(-1, 1)))
     point_cloud2 = np.hstack((coords2, list_time2.reshape(-1, 1)))
 
+    # Create PointCloud objects directly from the data
     pcd1 = o3d.geometry.PointCloud()
     pcd1.points = o3d.utility.Vector3dVector(point_cloud1)
 
     pcd2 = o3d.geometry.PointCloud()
     pcd2.points = o3d.utility.Vector3dVector(point_cloud2)
 
-    #plot_points_cloud(pcd1 , pcd2)
-
+    # Compute point cloud distances and RMSE scores
     distances1 = np.asarray(pcd1.compute_point_cloud_distance(pcd2))
     mean_squared_distance1 = np.mean(distances1 ** 2)
     rmse_score1 = np.sqrt(mean_squared_distance1)
@@ -107,10 +102,10 @@ def O3D(offense1, offense2):
     mean_squared_distance2 = np.mean(distances2 ** 2)
     rmse_score2 = np.sqrt(mean_squared_distance2)
 
+    rmse_score = 0.5 * rmse_score1 + 0.5 * rmse_score2
 
-    rmse_score = 0.5* rmse_score1 + 0.5* rmse_score2
-    
     return rmse_score
+
 
 ######################## K-means #########################
 
