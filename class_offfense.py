@@ -37,11 +37,12 @@ class Offense():
                 lines.append(line)
         p = Pitch(pitch_type='statsbomb')
         fig, ax = p.draw(figsize=(8, 8))
-        p.scatter(x=[coords[0] for coords in attack_coords], y=[coords[1] for coords in attack_coords], ax=ax)
+        p.scatter(x=[coords[0] for coords in attack_coords[:-1]], y=[coords[1] for coords in attack_coords[:-1]], ax=ax)
         p.lines(xstart=[coords[0][0] for coords in lines],
                 ystart=[coords[0][1] for coords in lines],
                 xend=[coords[1][0] for coords in lines],
                 yend=[coords[1][1] for coords in lines],
                 ax=ax)
+        p.scatter(x=attack_coords[-1][0], y=attack_coords[-1][1], ax=ax, c='orange')
         plt.title(f"Pattern:{self.play_pattern}  Shot Time:{self.list_time[-1]}")
         plt.show()
