@@ -2,7 +2,19 @@ import numpy as np
 import math
 from class_offfense import Offense
 import open3d as o3d
+from fastdtw import fastdtw
 
+############################ fastdtw #########################
+def FDTW(coords1, coords2):
+
+    # Compute FastDTW distance
+    distance, _ = fastdtw(coords1, coords2, dist=custom_distance_between_points_fdtw)
+
+    return distance
+
+def custom_distance_between_points_fdtw(point1, point2):
+    coords_d = np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
+    return coords_d
 
 ############################# DTW #########################
 def dp(dist_mat):
@@ -51,7 +63,6 @@ def custom_distance_between_points(offense1, i, offense2, j):
 
 
 
-
 ############################# O3D #########################
 
 def plot_points_cloud(pc1, pc2):
@@ -73,25 +84,18 @@ def plot_points_cloud(pc1, pc2):
     # Close the visualization window
     vis.destroy_window()
 
-
-
-def O3D(offense1, offense2):
-    # Extract relevant data from offense instances and normalize
-    coords1 = np.array(offense1.list_coords) / 170
-    coords2 = np.array(offense2.list_coords) / 170
-    list_time1 = np.array(offense1.list_time) / 248
-    list_time2 = np.array(offense2.list_time) / 248
-
+def create_pc(offense):
+    coords1 = np.array(offense.list_coords) / 170
+    list_time1 = np.array(offense.list_time) / 248
+ 
     # Create the point clouds by combining the stacked points with list_time
-    point_cloud1 = np.hstack((coords1, list_time1.reshape(-1, 1)))
-    point_cloud2 = np.hstack((coords2, list_time2.reshape(-1, 1)))
-
+    point_cloud = np.hstack((coords1, list_time1.reshape(-1, 1)))
     # Create PointCloud objects directly from the data
-    pcd1 = o3d.geometry.PointCloud()
-    pcd1.points = o3d.utility.Vector3dVector(point_cloud1)
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(point_cloud)
+    return pcd
 
-    pcd2 = o3d.geometry.PointCloud()
-    pcd2.points = o3d.utility.Vector3dVector(point_cloud2)
+def O3D(pcd1, pcd2):
 
     # Compute point cloud distances and RMSE scores
     distances1 = np.asarray(pcd1.compute_point_cloud_distance(pcd2))
@@ -105,6 +109,8 @@ def O3D(offense1, offense2):
     rmse_score = 0.5 * rmse_score1 + 0.5 * rmse_score2
 
     return rmse_score
+
+
 
 
 ######################## K-means #########################
@@ -139,6 +145,7 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
         centroids = new_centroids
     
     return labels, centroids
+
 
 
 ######################## SCORE ####################
