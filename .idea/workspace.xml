@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0b4179e-6e2d-4e89-ace4-d8aeea63428c" name="Changes" comment="orange color for the shot point in plot_offense">
-      <change afterPath="$PROJECT_DIR$/develop_hieararchy_clustering.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plot_utills.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/distance_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/distance_utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="e0b4179e-6e2d-4e89-ace4-d8aeea63428c" name="Changes" comment="Create hirarchical clustering and grid plotting" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +59,7 @@
       <workItem from="1691429513715" duration="582000" />
       <workItem from="1691430121263" duration="7001000" />
       <workItem from="1692301080413" duration="13082000" />
-      <workItem from="1692340466730" duration="2899000" />
+      <workItem from="1692340466730" duration="3091000" />
     </task>
     <task id="LOCAL-00001" summary="invistigate regular play pattern">
       <option name="closed" value="true" />
@@ -82,7 +77,23 @@
       <option name="project" value="LOCAL" />
       <updated>1692288780686</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Create hirarchical clustering and grid plotting">
+      <option name="closed" value="true" />
+      <created>1692343420798</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1692343420798</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Create hirarchical clustering and grid plotting">
+      <option name="closed" value="true" />
+      <created>1692343430202</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1692343430202</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +125,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="invistigate regular play pattern" />
     <MESSAGE value="orange color for the shot point in plot_offense" />
-    <option name="LAST_COMMIT_MESSAGE" value="orange color for the shot point in plot_offense" />
+    <MESSAGE value="Create hirarchical clustering and grid plotting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create hirarchical clustering and grid plotting" />
   </component>
 </project>
