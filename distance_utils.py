@@ -1,8 +1,11 @@
 import numpy as np
 import math
 from class_offfense import Offense
-import open3d as o3d
+#import open3d as o3d
 from fastdtw import fastdtw
+from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+import matplotlib.pyplot as plt
+
 
 ############################ fastdtw #########################
 def FDTW(coords1, coords2):
@@ -146,6 +149,34 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
     
     return labels, centroids
 
+######################## Hierarchical Clustering ############################################
+def hierarchical_clustering(list_offense, method='average'):
+    """
+    this function preforms hierarchical clustering on the list of offense
+    :param list_offense: list of objects from type Offense
+    :param method: the linkage method : average/single/complete
+    :return: plots the dendogram and returns the linkage matrix
+    """
+    #calculates the distance matrix with the DTW
+    dist_matrix = np.zeros((len(list_offense), len(list_offense)))
+    for i in range(len(list_offense)):
+        for j in range(len(list_offense)):
+            dist_matrix[i, j] = DTW(list_offense[i], list_offense[j])
+    linkage_matrix = linkage(dist_matrix, method=method)
+    fig, ax = plt.subplots(figsize=(12,6))
+    dendrogram(linkage_matrix)
+    plt.show()
+    return linkage_matrix
+
+def choose_nclusters(linkage_matrix, n_clusters):
+    """
+    this function performs cluster assignment after the dendrogram analysis
+    :param linkage_matrix: the linkage matrix which the hierarchical clystering returns
+    :param n_clusters: the number of clusters decided
+    :return: return the cluster assignment - array with the indices and their cluster
+    """
+    cluster_assignments = fcluster(linkage_matrix, t=n_clusters, criterion='maxclust')
+    return cluster_assignments
 
 
 ######################## SCORE ####################
