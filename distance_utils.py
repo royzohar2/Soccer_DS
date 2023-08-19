@@ -1,23 +1,11 @@
 import numpy as np
 import math
 from class_offfense import Offense
-#import open3d as o3d
-from fastdtw import fastdtw
+
 from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
 import matplotlib.pyplot as plt
 
 
-############################ fastdtw #########################
-def FDTW(coords1, coords2):
-
-    # Compute FastDTW distance
-    distance, _ = fastdtw(coords1, coords2, dist=custom_distance_between_points_fdtw)
-
-    return distance
-
-def custom_distance_between_points_fdtw(point1, point2):
-    coords_d = np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
-    return coords_d
 
 ############################# DTW #########################
 def dp(dist_mat):
@@ -38,7 +26,7 @@ def dp(dist_mat):
 
     # Strip infinity edges from cost_mat before returning
     cost = cost_mat[N, M] / (N + M)
-    return cost
+    return  cost
 
 def DTW(offense1, offense2):
     N = len(offense1.list_coords)
@@ -56,62 +44,12 @@ def custom_distance_between_points(offense1, i, offense2, j):
     coords_d = np.sqrt((offense1.list_coords[i][0] - offense2.list_coords[j][0])**2 + 
                        (offense1.list_coords[i][1] - offense2.list_coords[j][1])**2)
     time_d = abs(offense1.list_time[i] - offense2.list_time[j])
-    action_d = 0 if offense1.list_action_type[i] == offense2.list_action_type[j] else 1
-
     # Normalize
     time_d /= 248
     coords_d /= 170
-    d = 0.6 * coords_d + 0.3 * time_d + 0.1 * action_d
+    d = 0.6 * coords_d + 0.4 * time_d 
     return d
 
-
-
-############################# O3D #########################
-
-def plot_points_cloud(pc1, pc2):
-    # Set visualization options
-    vis = o3d.visualization.Visualizer()
-    vis.create_window()
-
-    # Set different colors for the point clouds
-    pc1.paint_uniform_color([1, 0, 0])  # Red color
-    pc2.paint_uniform_color([0, 0, 1])  # Blue color
-
-    # Add point clouds to the visualization
-    vis.add_geometry(pc1)
-    vis.add_geometry(pc2)
-
-    # Start visualization
-    vis.run()
-
-    # Close the visualization window
-    vis.destroy_window()
-
-def create_pc(offense):
-    coords1 = np.array(offense.list_coords) / 170
-    list_time1 = np.array(offense.list_time) / 248
- 
-    # Create the point clouds by combining the stacked points with list_time
-    point_cloud = np.hstack((coords1, list_time1.reshape(-1, 1)))
-    # Create PointCloud objects directly from the data
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(point_cloud)
-    return pcd
-
-def O3D(pcd1, pcd2):
-
-    # Compute point cloud distances and RMSE scores
-    distances1 = np.asarray(pcd1.compute_point_cloud_distance(pcd2))
-    mean_squared_distance1 = np.mean(distances1 ** 2)
-    rmse_score1 = np.sqrt(mean_squared_distance1)
-
-    distances2 = np.asarray(pcd2.compute_point_cloud_distance(pcd1))
-    mean_squared_distance2 = np.mean(distances2 ** 2)
-    rmse_score2 = np.sqrt(mean_squared_distance2)
-
-    rmse_score = 0.5 * rmse_score1 + 0.5 * rmse_score2
-
-    return rmse_score
 
 
 
@@ -122,8 +60,11 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
     n_samples = len(data)
     labels = [-1 for i in data]
     # Initialize centroids randomly
-    centroids = [int(np.random.uniform(0, n_samples)) for k in range(n_clusters)]
-    
+    centroids = [int(np.random.uniform(40, n_samples)) for k in range(n_clusters)]
+    centroids[0] = 26
+    centroids[1] = 6
+    centroids[2] = 36
+    centroids[3] = 14
     for _ in range(max_iterations):
         # Assign each data point to the nearest centroid
         for i in data:
@@ -143,6 +84,7 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
 
         # Check convergence
         if np.allclose(np.array(new_centroids), np.array(centroids)):
+            print("stop_before_max_iteration")
             break
         
         centroids = new_centroids
@@ -226,3 +168,34 @@ def calculate_bcss_wcss_ratio(clusters, custom_distance , global_centroid):
     # Calculate the ratio
     ratio = bcss / wcss if wcss != 0 else float('inf')
     return ratio
+
+
+
+
+from sklearn.metrics import silhouette_score
+
+def calculate_silhouette_score(clusters, custom_distance=None):
+    """
+    Calculate the silhouette score for a clustering model.
+
+    Parameters:
+    clusters (list of lists): A list of clusters, where each cluster is a list of data points.
+    custom_distance (function, optional): A custom distance metric. Default is None.
+
+    Returns:
+    float: The silhouette score for the clustering.
+    """
+    if custom_distance is None:
+        raise ValueError("A custom distance function is required for silhouette score.")
+
+    all_points = []
+    labels = []
+    
+    for cluster_idx, cluster in enumerate(clusters):
+        all_points.extend(cluster)
+        labels.extend([cluster_idx] * len(cluster))
+    
+    distances = [[custom_distance(p1, p2) for p2 in all_points] for p1 in all_points]
+    silhouette_avg = silhouette_score(distances, labels)
+    
+    return silhouette_avg
