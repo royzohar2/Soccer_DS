@@ -4,11 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0b4179e-6e2d-4e89-ace4-d8aeea63428c" name="Changes" comment="Create hirarchical clustering and grid plotting" />
+    <list default="true" id="e0b4179e-6e2d-4e89-ace4-d8aeea63428c" name="Changes" comment="Update hierarchical clustering">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/develop_hieararchy_clustering.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/develop_hieararchy_clustering.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/main.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_utills.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_utills.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -27,6 +43,9 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/anaconda3/lib/python3.10/site-packages/sklearn/cluster/_agglomerative.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -44,7 +63,7 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Jupyter&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -60,6 +79,9 @@
       <workItem from="1691430121263" duration="7001000" />
       <workItem from="1692301080413" duration="13082000" />
       <workItem from="1692340466730" duration="3091000" />
+      <workItem from="1692545464331" duration="4978000" />
+      <workItem from="1692591690496" duration="1136000" />
+      <workItem from="1692592870786" duration="775000" />
     </task>
     <task id="LOCAL-00001" summary="invistigate regular play pattern">
       <option name="closed" value="true" />
@@ -93,7 +115,15 @@
       <option name="project" value="LOCAL" />
       <updated>1692343430202</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Update hierarchical clustering">
+      <option name="closed" value="true" />
+      <created>1692555412184</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1692555412184</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,6 +156,7 @@
     <MESSAGE value="invistigate regular play pattern" />
     <MESSAGE value="orange color for the shot point in plot_offense" />
     <MESSAGE value="Create hirarchical clustering and grid plotting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create hirarchical clustering and grid plotting" />
+    <MESSAGE value="Update hierarchical clustering" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update hierarchical clustering" />
   </component>
 </project>

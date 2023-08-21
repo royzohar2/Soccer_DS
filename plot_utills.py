@@ -38,3 +38,4 @@ def offense_grid(list_offense, nrows=4, ncols=4, title_text=None):
                         xend=[coords[1][0] for coords in lines],
                         yend=[coords[1][1] for coords in lines], ax=ax)
             pitch.scatter(x=x_shot, y=y_shot, marker='football', ax=ax)
+            ax.text(20, -5, f"Shot Time: {offense.list_time[-1]}", fontsize=35, ha='center', va='center')
