@@ -131,10 +131,13 @@ def convert_to_clusters(labels):
     return clusters
 
 
-def calculate_centroid(cluster , distance):
+def calculate_centroid(cluster , distance, index_dict=None):
     centroid = None
     min_distance_sum = float('inf')
 
+    if index_dict is not None:
+        cluster = [index_dict[i] for i in cluster]
+        
     for i1 in cluster:
         distance_sum = sum(distance(i1, i2) for i2 in cluster)
         
