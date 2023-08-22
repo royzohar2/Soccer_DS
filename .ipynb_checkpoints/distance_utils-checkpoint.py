@@ -60,18 +60,18 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
     n_samples = len(data)
     labels = [-1 for i in data]
     # Initialize centroids randomly
-    centroids = [int(np.random.uniform(40, n_samples)) for k in range(n_clusters)]
-    centroids[0] = 26
-    centroids[1] = 6
-    centroids[2] = 36
-    centroids[3] = 14
+    centroids = np.random.choice(data, n_clusters)
+    # Set three known centroids that different from each other
+    centroids[0] = 2747
+    centroids[1] = 1558
+    centroids[2] = 2013
     for _ in range(max_iterations):
         # Assign each data point to the nearest centroid
-        for i in data:
+        for i, index in enumerate(data):
             most_closest = np.inf
             closest_centroid = labels[i]
             for c in centroids:
-                tmp = custom_distance(i, c)
+                tmp = custom_distance(index, c)
                 if tmp < most_closest:
                     most_closest = tmp
                     closest_centroid = c
@@ -79,7 +79,7 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
         
         new_centroids = []
         for c in centroids:
-                indices_with_c = [index for index, value in enumerate(labels) if value == c]
+                indices_with_c = [data[index] for index, value in enumerate(labels) if value == c]
                 new_centroids.append(calculate_centroid(indices_with_c , custom_distance))
 
         # Check convergence
@@ -131,13 +131,10 @@ def convert_to_clusters(labels):
     return clusters
 
 
-def calculate_centroid(cluster , distance, index_dict=None):
+def calculate_centroid(cluster , distance):
     centroid = None
     min_distance_sum = float('inf')
 
-    if index_dict is not None:
-        cluster = [index_dict[i] for i in cluster]
-        
     for i1 in cluster:
         distance_sum = sum(distance(i1, i2) for i2 in cluster)
         

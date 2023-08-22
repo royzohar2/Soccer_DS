@@ -61,6 +61,10 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
     labels = [-1 for i in data]
     # Initialize centroids randomly
     centroids = np.random.choice(data, n_clusters)
+    # Set three known centroids that different from each other
+    centroids[0] = 2747
+    centroids[1] = 1558
+    centroids[2] = 2013
     for _ in range(max_iterations):
         # Assign each data point to the nearest centroid
         for i, index in enumerate(data):
