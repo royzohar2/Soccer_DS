@@ -92,20 +92,15 @@ def custom_kmeans(data, n_clusters, max_iterations , custom_distance ):
     return labels, centroids
 
 ######################## Hierarchical Clustering ############################################
-def hierarchical_clustering(list_offense, method='average'):
+def hierarchical_clustering(dist_matrix, method='average'):
     """
     this function preforms hierarchical clustering on the list of offense
-    :param list_offense: list of objects from type Offense
+    :param dist_matrix: the distance matrix with DTW between offense
     :param method: the linkage method : average/single/complete
-    :return: plots the dendogram and returns the linkage matrix
+    :return: plots the dendrogram and returns the linkage matrix
     """
-    #calculates the distance matrix with the DTW
-    dist_matrix = np.zeros((len(list_offense), len(list_offense)))
-    for i in range(len(list_offense)):
-        for j in range(len(list_offense)):
-            dist_matrix[i, j] = DTW(list_offense[i], list_offense[j])
     linkage_matrix = linkage(dist_matrix, method=method)
-    fig, ax = plt.subplots(figsize=(12,6))
+    fig, ax = plt.subplots(figsize=(15,6))
     dendrogram(linkage_matrix)
     plt.show()
     return linkage_matrix
@@ -119,6 +114,7 @@ def choose_nclusters(linkage_matrix, n_clusters):
     """
     cluster_assignments = fcluster(linkage_matrix, t=n_clusters, criterion='maxclust')
     return cluster_assignments
+
 
 
 ######################## SCORE ####################
