@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e0b4179e-6e2d-4e89-ace4-d8aeea63428c" name="Changes" comment="Update hierarchical clustering">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/develop_hieararchy_clustering.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/develop_hieararchy_clustering.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/main-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/main-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kmeans_filtered_results.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/main.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_utills.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_utills.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,6 +82,7 @@
       <workItem from="1692545464331" duration="4978000" />
       <workItem from="1692591690496" duration="1136000" />
       <workItem from="1692592870786" duration="775000" />
+      <workItem from="1692766453177" duration="375000" />
     </task>
     <task id="LOCAL-00001" summary="invistigate regular play pattern">
       <option name="closed" value="true" />
